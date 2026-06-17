@@ -6,6 +6,6 @@ export class NoopAnimationsModule {}
 @NgModule({})
 export class BrowserAnimationsModule {}
 
-export const provideAnimationsAsync = () => [];
-export const provideAnimations = () => [];
-export const provideNoopAnimations = () => [];
+export const provideAnimationsAsync = (): never[] => [];
+export const provideAnimations = (): never[] => [];
+export const provideNoopAnimations = (): never[] => [];

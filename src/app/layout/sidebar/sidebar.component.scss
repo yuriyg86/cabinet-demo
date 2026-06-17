@@ -90,10 +90,6 @@ $transition: width 0.2s ease;
 
     &--active {
       color: #3b82f6;
-
-      .sidebar__nav-icon {
-        color: #3b82f6;
-      }
     }
 
     .sidebar--expanded & {

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -83,7 +83,7 @@ describe('authInterceptor', () => {
     tokenService.getToken.mockReturnValue('old-tok');
     tokenService.getRefreshToken.mockReturnValue(null);
 
-    http.get('/test').subscribe({ error: () => {} });
+    http.get('/test').subscribe({ error: jest.fn() });
 
     const req = httpMock.expectOne('/test');
     req.flush(null, { status: 401, statusText: 'Unauthorized' });
@@ -95,7 +95,7 @@ describe('authInterceptor', () => {
   it('should not attempt refresh for /front/logon requests', () => {
     tokenService.getToken.mockReturnValue('old-tok');
 
-    http.get('/front/logon').subscribe({ error: () => {} });
+    http.get('/front/logon').subscribe({ error: jest.fn() });
 
     const req = httpMock.expectOne('/front/logon');
     req.flush(null, { status: 401, statusText: 'Unauthorized' });

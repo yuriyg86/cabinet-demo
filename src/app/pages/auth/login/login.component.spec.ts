@@ -1,7 +1,7 @@
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
-import { NEVER, of, throwError } from 'rxjs';
+import { NEVER } from 'rxjs';
 import { AuthApiService } from '../../../api/services/auth-api.service';
 import { TokenService } from '../../../core/services/token.service';
 import { LoginComponent } from './login.component';

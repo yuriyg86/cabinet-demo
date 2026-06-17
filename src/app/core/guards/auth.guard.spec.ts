@@ -5,7 +5,7 @@ import { authGuard } from './auth.guard';
 import { TokenService } from '../services/token.service';
 
 describe('authGuard', () => {
-  const runGuard = () =>
+  const runGuard = (): ReturnType<typeof authGuard> =>
     TestBed.runInInjectionContext(() => authGuard({} as never, {} as never));
 
   beforeEach(() => {
