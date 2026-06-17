@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\")"
+    ]
+  }
+}
