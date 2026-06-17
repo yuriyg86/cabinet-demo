@@ -2,6 +2,7 @@ import {
   AbstractControl,
   AsyncValidatorFn,
   FormBuilder,
+  FormControl,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -77,7 +78,7 @@ export class CategoryFormComponent implements OnInit {
     });
   }
 
-  protected get nameControl() {
+  protected get nameControl(): FormControl<string> {
     return this.form.controls.name;
   }
 

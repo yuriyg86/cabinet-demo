@@ -16,6 +16,7 @@ This section should be filled in the future.
 
 ## TypeScript Best Practices
 
+- **All class methods and getters must have an explicit return type.** This is enforced by ESLint (`@typescript-eslint/explicit-function-return-type`). Arrow function expressions (e.g. in stores, callbacks) are exempt.
 - Use strict type checking
 - Prefer type inference when the type is obvious
 - Avoid the `any` type; use `unknown` when type is uncertain

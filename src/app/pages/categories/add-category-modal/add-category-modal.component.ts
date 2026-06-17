@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
 import { CategoriesListStore } from '../categories-list/categories-list.store';
 import { Observable, timer, switchMap, map } from 'rxjs';
@@ -34,7 +34,7 @@ export class AddCategoryModalComponent implements OnInit {
     this.form.controls.name.addAsyncValidators(nameExistsValidator(this.api, null));
   }
 
-  protected get nameControl() {
+  protected get nameControl(): FormControl<string> {
     return this.form.controls.name;
   }
 

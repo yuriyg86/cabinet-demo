@@ -4,9 +4,12 @@ import {
   Component,
   ElementRef,
   inject,
+  Injector,
   OnDestroy,
   OnInit,
   signal,
+  untracked,
+  effect,
   viewChild,
 } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -28,6 +31,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   protected readonly store = inject(CategoriesListStore);
   protected readonly confirmStore = inject(ConfirmDialogStore);
 
+  private readonly injector = inject(Injector);
   private readonly scrollSentinel = viewChild<ElementRef<HTMLElement>>('scrollSentinel');
   private readonly destroy$ = new Subject<void>();
   private readonly searchInput$ = new Subject<string>();
@@ -37,6 +41,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
   constructor() {
     afterNextRender(() => this.setupIntersectionObserver());
+    effect(() => this.loadNextPageIfSentinelStillVisible());
   }
 
   ngOnInit(): void {
@@ -75,6 +80,27 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   protected onDeleteCancelled(): void {
     this.confirmStore.close();
     this.pendingDeleteId.set(null);
+  }
+
+  private loadNextPageIfSentinelStillVisible(): void {
+    const isLoading = this.store.loading();
+    if (isLoading) return;
+
+    untracked(() => {
+      afterNextRender(
+        () => {
+          const sentinel = this.scrollSentinel()?.nativeElement;
+          if (!sentinel || !this.store.hasMore()) return;
+
+          const rect = sentinel.getBoundingClientRect();
+          const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+          if (isVisible) {
+            this.store.loadNextPage();
+          }
+        },
+        { injector: this.injector },
+      );
+    });
   }
 
   private setupIntersectionObserver(): void {

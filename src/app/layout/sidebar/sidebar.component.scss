@@ -1,0 +1,131 @@
+$sidebar-collapsed-width: 78px;
+$sidebar-expanded-width: 220px;
+$transition: width 0.2s ease;
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: $sidebar-collapsed-width;
+  background: #1e2433;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  transition: $transition;
+  overflow: hidden;
+
+  &--expanded {
+    width: $sidebar-expanded-width;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 20px 0;
+    background: none;
+    border: none;
+    color: #8b95a8;
+    cursor: pointer;
+    justify-content: center;
+    transition: color 0.15s;
+    flex-shrink: 0;
+
+    &:hover {
+      color: #fff;
+    }
+
+    .sidebar--expanded & {
+      justify-content: flex-start;
+      padding-left: 24px;
+    }
+  }
+
+  &__toggle-icon {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  &__toggle-label {
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &__nav {
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 0;
+    justify-content: center;
+    color: #8b95a8;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.15s, background 0.15s;
+    border-radius: 0;
+    white-space: nowrap;
+
+    &:hover {
+      color: #fff;
+      background: rgb(255 255 255 / 5%);
+    }
+
+    &--active {
+      color: #3b82f6;
+
+      .sidebar__nav-icon {
+        color: #3b82f6;
+      }
+    }
+
+    .sidebar--expanded & {
+      justify-content: flex-start;
+      padding-left: 24px;
+    }
+  }
+
+  &__nav-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  &__nav-label {
+    font-size: 13px;
+  }
+
+  &__bottom {
+    padding: 8px 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-top: 1px solid rgb(255 255 255 / 8%);
+  }
+
+  &__logout {
+    color: #8b95a8;
+
+    &:hover {
+      color: #f87171;
+      background: rgb(248 113 113 / 8%);
+    }
+  }
+}

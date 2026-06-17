@@ -22,7 +22,8 @@
       "PowerShell(wsl -d Ubuntu-24.04 -- bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm install @ngrx/signals 2>&1\")",
       "Bash(ls \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/node_modules/@ngrx/signals/\")",
       "Bash(grep -o \"export.*{[^}]*}\" \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/node_modules/@ngrx/signals/fesm2022/ngrx-signals-rxjs-interop.mjs\" | head -5)",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(k\\) for k in d.get\\('exports',{}\\).keys\\(\\)]\")"
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(k\\) for k in d.get\\('exports',{}\\).keys\\(\\)]\")",
+      "mcp__plugin_figma_figma__get_metadata"
     ]
   }
 }

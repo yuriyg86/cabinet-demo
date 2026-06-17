@@ -1,0 +1,93 @@
+<nav class="sidebar" [class.sidebar--expanded]="!collapsed()" aria-label="Main navigation">
+  <button
+    type="button"
+    class="sidebar__toggle"
+    (click)="toggleCollapsed()"
+    [attr.aria-expanded]="!collapsed()"
+    aria-label="Toggle navigation"
+  >
+    <span class="sidebar__toggle-icon" aria-hidden="true">{{ collapsed() ? '☰' : '✕' }}</span>
+    @if (!collapsed()) {
+      <span class="sidebar__toggle-label">Close</span>
+    }
+  </button>
+
+  <ul class="sidebar__nav" role="list">
+    <li>
+      <a
+        routerLink="/categories"
+        routerLinkActive="sidebar__nav-item--active"
+        class="sidebar__nav-item"
+        [attr.aria-label]="collapsed() ? 'Categories' : null"
+        [attr.title]="collapsed() ? 'Categories' : null"
+      >
+        <span class="sidebar__nav-icon" aria-hidden="true">⊞</span>
+        @if (!collapsed()) {
+          <span class="sidebar__nav-label">Categories</span>
+        }
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/dashboard"
+        class="sidebar__nav-item"
+        [attr.aria-label]="collapsed() ? 'Dashboard' : null"
+        [attr.title]="collapsed() ? 'Dashboard' : null"
+      >
+        <span class="sidebar__nav-icon" aria-hidden="true">◫</span>
+        @if (!collapsed()) {
+          <span class="sidebar__nav-label">Dashboard</span>
+        }
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/components"
+        class="sidebar__nav-item"
+        [attr.aria-label]="collapsed() ? 'Components' : null"
+        [attr.title]="collapsed() ? 'Components' : null"
+      >
+        <span class="sidebar__nav-icon" aria-hidden="true">❖</span>
+        @if (!collapsed()) {
+          <span class="sidebar__nav-label">Components</span>
+        }
+      </a>
+    </li>
+  </ul>
+
+  <div class="sidebar__bottom">
+    <a
+      routerLink="/profile"
+      class="sidebar__nav-item"
+      [attr.aria-label]="collapsed() ? 'Profile' : null"
+      [attr.title]="collapsed() ? 'Profile' : null"
+    >
+      <span class="sidebar__nav-icon" aria-hidden="true">◉</span>
+      @if (!collapsed()) {
+        <span class="sidebar__nav-label">Profile</span>
+      }
+    </a>
+
+    <button
+      type="button"
+      class="sidebar__nav-item sidebar__logout"
+      (click)="onLogoutClick()"
+      [attr.aria-label]="collapsed() ? 'Log out' : null"
+      [attr.title]="collapsed() ? 'Log out' : null"
+    >
+      <span class="sidebar__nav-icon" aria-hidden="true">⇥</span>
+      @if (!collapsed()) {
+        <span class="sidebar__nav-label">Log out</span>
+      }
+    </button>
+  </div>
+</nav>
+
+@if (confirmStore.isOpen()) {
+  <app-confirm-dialog
+    [message]="confirmStore.message()"
+    confirmLabel="Log out"
+    (confirmed)="onLogoutConfirmed()"
+    (cancelled)="onLogoutCancelled()"
+  />
+}

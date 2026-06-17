@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginStore } from './login.store';
 
 @Component({
@@ -27,11 +27,11 @@ export class LoginComponent {
     this.store.login(this.form.getRawValue());
   }
 
-  protected get loginControl() {
+  protected get loginControl(): FormControl<string> {
     return this.form.controls.login;
   }
 
-  protected get passwordControl() {
+  protected get passwordControl(): FormControl<string> {
     return this.form.controls.password;
   }
 }

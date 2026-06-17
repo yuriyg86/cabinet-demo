@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  min-height: 100vh;
+}
+
+.layout__content {
+  flex: 1;
+  margin-left: 78px;
+  min-width: 0;
+  transition: margin-left 0.2s ease;
+}
