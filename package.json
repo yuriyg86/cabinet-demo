@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "jest",
     "serve:ssr:cabinet-app": "node dist/cabinet-app/server/server.mjs",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "lint:styles": "stylelint \"src/**/*.scss\""
   },
   "private": true,
   "packageManager": "npm@11.16.0",
@@ -45,6 +46,8 @@
     "ng-mocks": "^14.15.3",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard-scss": "^13.1.0",
     "tailwindcss": "^4.1.12",
     "ts-jest": "^29.4.11",
     "typescript": "~6.0.2",
