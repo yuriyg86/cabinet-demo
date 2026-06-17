@@ -13,11 +13,11 @@ export class CategoriesApiService {
       params.pageSize,
       params.pageNumber,
       params.sortDesc,
-    ) as Observable<CategoryList>;
+    );
   }
 
   getById(id: number): Observable<Category> {
-    return this.categoriesService.getById(id) as Observable<Category>;
+    return this.categoriesService.getById(id);
   }
 
   create(data: EditCategory): Observable<number> {

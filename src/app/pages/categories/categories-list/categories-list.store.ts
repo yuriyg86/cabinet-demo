@@ -4,12 +4,12 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
-import { CategoryListItem, EditCategory } from '../../../api/models/categories.models';
+import { Category, EditCategory } from '../../../api/models/categories.models';
 
 const pageSize = 20;
 
 interface CategoriesListState {
-  items: CategoryListItem[];
+  items: Category[];
   canAdd: boolean;
   loading: boolean;
   hasMore: boolean;

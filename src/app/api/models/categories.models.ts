@@ -1,23 +1,6 @@
-export interface CategoryListItem {
-  id: number;
-  name: string;
-}
-
-export interface CategoryList {
-  canAdd: boolean;
-  items: CategoryListItem[];
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  canEdit: boolean;
-  canDelete: boolean;
-}
-
-export interface EditCategory {
-  name: string;
-}
+export type { ZidiumWebServiceFrontCategoryDto as Category } from '../generated/model/zidiumWebServiceFrontCategoryDto';
+export type { ZidiumWebServiceFrontCategoryListDto as CategoryList } from '../generated/model/zidiumWebServiceFrontCategoryListDto';
+export type { ZidiumWebServiceFrontEditCategoryDto as EditCategory } from '../generated/model/zidiumWebServiceFrontEditCategoryDto';
 
 export interface CategoryListParams {
   search?: string;

@@ -8,7 +8,7 @@ export class AuthApiService {
   private readonly logonService = inject(LogonService);
 
   logon(request: LogonRequest): Observable<LogonResponse> {
-    return this.logonService.logon(request) as Observable<LogonResponse>;
+    return this.logonService.logon(request);
   }
 
   refreshToken(request: RefreshTokenRequest): Observable<TokensResponse> {

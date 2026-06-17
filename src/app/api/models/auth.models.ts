@@ -1,18 +1,4 @@
-export interface LogonRequest {
-  login: string;
-  password: string;
-}
-
-export interface LogonResponse {
-  token: string;
-  refreshToken: string;
-}
-
-export interface RefreshTokenRequest {
-  refreshToken: string;
-}
-
-export interface TokensResponse {
-  token: string;
-  refreshToken: string;
-}
+export type { LogonRequestDto as LogonRequest } from '../generated/model/logonRequestDto';
+export type { LogonResponseDto as LogonResponse } from '../generated/model/logonResponseDto';
+export type { RefreshTokenRequestDto as RefreshTokenRequest } from '../generated/model/refreshTokenRequestDto';
+export type { TokensResponseDto as TokensResponse } from '../generated/model/tokensResponseDto';
