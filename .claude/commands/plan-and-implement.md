@@ -31,7 +31,9 @@ The input may be a Jira ticket key (e.g. `RX-123`) **or** plain-text task descri
 
 ## Phase 2 — Create a Git Branch
 
-Every ticket starts from a fresh `main`. Propose a branch name, confirm it with the engineer, then:
+**Ask the engineer to confirm the branch name before creating it.** Do not create the branch until you have explicit approval.
+
+Every ticket starts from a fresh `main`. Propose a branch name and wait for confirmation, then:
 
 ```bash
 git status                    # verify working tree is clean
@@ -41,8 +43,6 @@ git checkout -b <branch-name>
 ```
 
 Do not shortcut with a bare `git checkout -b` — that skips the refresh and lets stale starting points sneak in.
-
-User can skip this Phase.
 
 ---
 
@@ -138,3 +138,5 @@ When all phases are done:
 3. List all files modified
 4. Note any follow-up items the engineer should be aware of
 5. Suggest next steps (e.g., open a PR, deploy to staging)
+
+**Do NOT create a git commit.** Leave staging and committing to the engineer. But suggest commit message.

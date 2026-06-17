@@ -12,7 +12,17 @@
       "Bash(ls /home/user/.claude/ 2>/dev/null || ls ~/.claude/)",
       "Bash(python3 -m json.tool)",
       "Bash(wsl -d ubuntu-24.04 -- bash -c \"ls ~/devprojects/recursion/cabinet-app | grep -E 'stylelint|.stylelint'\")",
-      "Bash(wsl -d ubuntu-24.04 -- bash -c \"cat ~/devprojects/recursion/cabinet-app/package.json | grep -i 'stylelint'\")"
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"cat ~/devprojects/recursion/cabinet-app/package.json | grep -i 'stylelint'\")",
+      "Read(///wsl.localhost/ubuntu-24.04//**)",
+      "Bash(ls /wsl/)",
+      "mcp__plugin_figma_figma__get_design_context",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "Read(///wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/**)",
+      "Bash(npm install *)",
+      "PowerShell(wsl -d Ubuntu-24.04 -- bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm install @ngrx/signals 2>&1\")",
+      "Bash(ls \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/node_modules/@ngrx/signals/\")",
+      "Bash(grep -o \"export.*{[^}]*}\" \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/node_modules/@ngrx/signals/fesm2022/ngrx-signals-rxjs-interop.mjs\" | head -5)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(k\\) for k in d.get\\('exports',{}\\).keys\\(\\)]\")"
     ]
   }
 }

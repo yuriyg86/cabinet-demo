@@ -188,6 +188,12 @@ source$.pipe(
   patchState(store, { ... });
   ```
 
+- **Use `signalStore` whenever a component needs to make API calls.** API calls must not be placed directly in the component — they belong in a `signalStore` provided by that component. Use `rxMethod` from `@ngrx/signals/rxjs-interop` for all observable-based async operations inside a store.
+
+## zone.js
+
+- `zone.js` is **only allowed in test configuration** (e.g. `jest.setup.ts`, `TestBed`). Do NOT import or reference `zone.js` in application code (components, services, stores, interceptors, etc.). Application code must be zone-free.
+
 ## Testing
 
 - Use [Spectator](https://ngneat.github.io/spectator/) with Jest for unit tests (`@ngneat/spectator/jest`)
