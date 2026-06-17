@@ -25,7 +25,9 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(k\\) for k in d.get\\('exports',{}\\).keys\\(\\)]\")",
       "mcp__plugin_figma_figma__get_metadata",
       "Bash(npx ng *)",
-      "Bash(git -C \"\\\\\\\\wsl.localhost\\\\ubuntu-24.04\\\\home\\\\user\\\\devprojects\\\\recursion\\\\cabinet-app\" diff --stat HEAD)"
+      "Bash(git -C \"\\\\\\\\wsl.localhost\\\\ubuntu-24.04\\\\home\\\\user\\\\devprojects\\\\recursion\\\\cabinet-app\" diff --stat HEAD)",
+      "Bash(npm run *)",
+      "Bash(wsl -d ubuntu-24.04 -e bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm run generate:api 2>&1\")"
     ]
   }
 }
