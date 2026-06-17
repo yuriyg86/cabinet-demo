@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "jest",
     "serve:ssr:cabinet-app": "node dist/cabinet-app/server/server.mjs",
     "lint": "ng lint"
   },
@@ -30,17 +30,25 @@
     "@angular/cli": "^22.0.1",
     "@angular/compiler-cli": "^22.0.0",
     "@eslint/js": "^10.0.1",
+    "@jest/globals": "^30.4.1",
+    "@ngneat/spectator": "^22.1.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/express": "^5.0.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.17.19",
     "angular-eslint": "22.0.0",
     "eslint": "^10.3.0",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "jest-preset-angular": "^17.0.0",
     "jsdom": "^28.0.0",
+    "ng-mocks": "^14.15.3",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.12",
+    "ts-jest": "^29.4.11",
     "typescript": "~6.0.2",
     "typescript-eslint": "8.60.1",
-    "vitest": "^4.0.8"
+    "zone.js": "^0.16.2"
   }
 }
