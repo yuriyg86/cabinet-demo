@@ -12,15 +12,13 @@ import {
   Component,
   effect,
   inject,
+  input,
   OnInit,
-  signal,
+  output,
   untracked,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, timer, switchMap, map } from 'rxjs';
 import { CategoryFormStore } from './category-form.store';
-import { ConfirmDialogStore } from '../../../shared/confirm-dialog/confirm-dialog.store';
-import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
 
 function nameExistsValidator(api: CategoriesApiService, currentId: number): AsyncValidatorFn {
@@ -38,18 +36,17 @@ function nameExistsValidator(api: CategoriesApiService, currentId: number): Asyn
   templateUrl: './category-form.component.html',
   styleUrl: './category-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CategoryFormStore, ConfirmDialogStore],
-  imports: [ReactiveFormsModule, ConfirmDialogComponent],
+  providers: [CategoryFormStore],
+  imports: [ReactiveFormsModule],
 })
 export class CategoryFormComponent implements OnInit {
+  readonly id = input.required<number>();
+  readonly closed = output<void>();
+  readonly saved = output<void>();
+
   protected readonly store = inject(CategoryFormStore);
-  protected readonly confirmStore = inject(ConfirmDialogStore);
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(CategoriesApiService);
-
-  protected readonly categoryId = signal<number>(0);
 
   protected readonly form = this.fb.nonNullable.group({
     name: ['', { validators: [Validators.required] }],
@@ -57,11 +54,11 @@ export class CategoryFormComponent implements OnInit {
 
   constructor() {
     effect(() => this.patchFormWhenCategoryLoaded());
+    effect(() => this.emitWhenSaved());
   }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.categoryId.set(id);
+    const id = this.id();
     this.store.load(id);
     this.form.controls.name.addAsyncValidators(nameExistsValidator(this.api, id));
   }
@@ -76,6 +73,11 @@ export class CategoryFormComponent implements OnInit {
         this.form.disable();
       }
     });
+  }
+
+  private emitWhenSaved(): void {
+    if (!this.store.saveCompleted()) return;
+    untracked(() => this.saved.emit());
   }
 
   protected get nameControl(): FormControl<string> {
@@ -95,23 +97,10 @@ export class CategoryFormComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    this.store.save({ id: this.categoryId(), data: this.form.getRawValue() });
+    this.store.save({ id: this.id(), data: this.form.getRawValue() });
   }
 
-  protected onDeleteClick(): void {
-    this.confirmStore.open(`Delete category "${this.store.category()?.name}"?`);
-  }
-
-  protected onDeleteConfirmed(): void {
-    this.confirmStore.close();
-    this.store.delete(this.categoryId());
-  }
-
-  protected onDeleteCancelled(): void {
-    this.confirmStore.close();
-  }
-
-  protected onBack(): void {
-    this.router.navigate(['/categories']);
+  protected onClose(): void {
+    this.closed.emit();
   }
 }

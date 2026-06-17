@@ -1,5 +1,4 @@
 import { computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
@@ -20,6 +19,7 @@ interface CategoriesListState {
   deletingId: number | null;
   addModalOpen: boolean;
   creating: boolean;
+  editingId: number | null;
 }
 
 const initialState: CategoriesListState = {
@@ -33,6 +33,7 @@ const initialState: CategoriesListState = {
   deletingId: null,
   addModalOpen: false,
   creating: false,
+  editingId: null,
 };
 
 interface LoadPageParams {
@@ -47,7 +48,7 @@ export const CategoriesListStore = signalStore(
   withComputed((store) => ({
     isEmpty: computed(() => !store.loading() && store.items().length === 0),
   })),
-  withMethods((store, api = inject(CategoriesApiService), router = inject(Router)) => ({
+  withMethods((store, api = inject(CategoriesApiService)) => ({
     setSearch(search: string): void {
       patchState(store, { search, page: 0, items: [], hasMore: true });
     },
@@ -107,8 +108,12 @@ export const CategoriesListStore = signalStore(
       ),
     ),
 
-    navigateToItem(id: number): void {
-      router.navigate(['/categories', id]);
+    openEditModal(id: number): void {
+      patchState(store, { editingId: id });
+    },
+
+    closeEditModal(): void {
+      patchState(store, { editingId: null });
     },
   })),
   withMethods((store) => ({

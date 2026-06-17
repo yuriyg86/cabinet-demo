@@ -1,46 +1,53 @@
-.page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #f5f6fa;
-}
-
-.page-header {
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 40%);
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
   background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 15%);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
 
   &__title {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 600;
     margin: 0;
-    flex: 1;
     color: #1a1a2e;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   &__actions {
     display: flex;
+    justify-content: flex-end;
     gap: 10px;
+    margin-top: 4px;
   }
-}
 
-.page-content {
-  flex: 1;
-  padding: 24px;
-}
-
-.form-card {
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  padding: 24px;
-  max-width: 560px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 32px;
+  }
 }
 
 .field {
@@ -57,7 +64,7 @@
   &__value {
     font-size: 14px;
     color: #6b7280;
-    padding: 8px 0;
+    padding: 4px 0;
   }
 
   &__input {
@@ -96,13 +103,6 @@
   }
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 4px;
-}
-
 .server-error {
   margin: 0;
   padding: 10px 12px;
@@ -111,13 +111,6 @@
   border-radius: 6px;
   color: #dc2626;
   font-size: 13px;
-}
-
-.loading-state {
-  display: flex;
-  justify-content: center;
-  padding: 48px;
-  color: #6b7280;
 }
 
 .btn {
@@ -164,17 +157,6 @@
 
     &:hover:not(:disabled) {
       background: #b91c1c;
-    }
-  }
-
-  &--back {
-    background: none;
-    color: #6b7280;
-    padding: 6px 12px;
-
-    &:hover {
-      background: #f3f4f6;
-      color: #374151;
     }
   }
 }

@@ -13,22 +13,10 @@ export const routes: Routes = [
     children: [
       {
         path: 'categories',
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./pages/categories/categories-list/categories-list.component').then(
-                (m) => m.CategoriesListComponent,
-              ),
-          },
-          {
-            path: ':id',
-            loadComponent: () =>
-              import('./pages/categories/category-form/category-form.component').then(
-                (m) => m.CategoryFormComponent,
-              ),
-          },
-        ],
+        loadComponent: () =>
+          import('./pages/categories/categories-list/categories-list.component').then(
+            (m) => m.CategoriesListComponent,
+          ),
       },
       {
         path: '',

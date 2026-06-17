@@ -1,5 +1,4 @@
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
@@ -11,18 +10,16 @@ interface CategoryFormState {
   category: Category | null;
   loading: boolean;
   saving: boolean;
-  deleting: boolean;
   saveError: string | null;
-  deleteError: string | null;
+  saveCompleted: boolean;
 }
 
 const initialState: CategoryFormState = {
   category: null,
   loading: false,
   saving: false,
-  deleting: false,
   saveError: null,
-  deleteError: null,
+  saveCompleted: false,
 };
 
 interface SaveParams {
@@ -32,10 +29,10 @@ interface SaveParams {
 
 export const CategoryFormStore = signalStore(
   withState(initialState),
-  withMethods((store, api = inject(CategoriesApiService), router = inject(Router)) => ({
+  withMethods((store, api = inject(CategoriesApiService)) => ({
     load: rxMethod<number>(
       pipe(
-        tap(() => patchState(store, { loading: true, category: null })),
+        tap(() => patchState(store, { loading: true, category: null, saveCompleted: false })),
         switchMap((id) =>
           api.getById(id).pipe(
             tap((category) => {
@@ -56,29 +53,10 @@ export const CategoryFormStore = signalStore(
         switchMap(({ id, data }) =>
           api.update(id, data).pipe(
             tap(() => {
-              patchState(store, { saving: false });
-              router.navigate(['/categories']);
+              patchState(store, { saving: false, saveCompleted: true });
             }),
             catchError(() => {
               patchState(store, { saving: false, saveError: 'Failed to save. Please try again.' });
-              return EMPTY;
-            }),
-          ),
-        ),
-      ),
-    ),
-
-    delete: rxMethod<number>(
-      pipe(
-        tap(() => patchState(store, { deleting: true, deleteError: null })),
-        switchMap((id) =>
-          api.delete(id).pipe(
-            tap(() => {
-              patchState(store, { deleting: false });
-              router.navigate(['/categories']);
-            }),
-            catchError(() => {
-              patchState(store, { deleting: false, deleteError: 'Failed to delete. Please try again.' });
               return EMPTY;
             }),
           ),

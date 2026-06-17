@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, output } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
-import { CategoriesListStore } from '../categories-list/categories-list.store';
+import { EditCategory } from '../../../api/models/categories.models';
 import { Observable, timer, switchMap, map } from 'rxjs';
 
 function nameExistsValidator(api: CategoriesApiService, id: number | null): AsyncValidatorFn {
@@ -22,7 +22,10 @@ function nameExistsValidator(api: CategoriesApiService, id: number | null): Asyn
   imports: [ReactiveFormsModule],
 })
 export class AddCategoryModalComponent implements OnInit {
-  protected readonly store = inject(CategoriesListStore);
+  readonly saving = input.required<boolean>();
+  readonly submitted = output<EditCategory>();
+  readonly cancelled = output<void>();
+
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(CategoriesApiService);
 
@@ -51,10 +54,10 @@ export class AddCategoryModalComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    this.store.createItem(this.form.getRawValue());
+    this.submitted.emit(this.form.getRawValue());
   }
 
   protected onCancel(): void {
-    this.store.closeAddModal();
+    this.cancelled.emit();
   }
 }

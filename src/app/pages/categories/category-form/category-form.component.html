@@ -1,84 +1,58 @@
-<div class="page">
-  <header class="page-header">
-    <button type="button" class="btn btn--back" (click)="onBack()" aria-label="Back to categories">← Back</button>
-    <h1 class="page-header__title">Category</h1>
-    <div class="page-header__actions">
-      @if (store.category()?.canDelete) {
-        <button
-          type="button"
-          class="btn btn--danger"
-          [disabled]="store.deleting()"
-          (click)="onDeleteClick()"
-        >
-          @if (store.deleting()) {
-            <span class="spinner" aria-hidden="true"></span>
-          }
-          Delete
-        </button>
-      }
+<div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 id="edit-modal-title" class="modal__title">Category</h2>
     </div>
-  </header>
 
-  <main class="page-content">
     @if (store.loading()) {
-      <div class="loading-state" aria-live="polite" aria-label="Loading">
+      <div class="modal__loading" aria-live="polite" aria-label="Loading">
         <span class="spinner"></span>
       </div>
     } @else if (store.category()) {
-      <div class="form-card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="modal__form">
         <div class="field">
           <span class="field__label">Id</span>
           <span class="field__value">{{ store.category()!.id }}</span>
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-          <div class="field">
-            <label class="field__label" for="edit-name">Name</label>
-            <input
-              id="edit-name"
-              type="text"
-              formControlName="name"
-              class="field__input"
-              [class.field__input--error]="nameErrorMessage"
-              aria-required="true"
-              [attr.aria-invalid]="!!nameErrorMessage"
-              aria-describedby="edit-name-error"
-            />
-            @if (nameErrorMessage) {
-              <span id="edit-name-error" class="field__error" role="alert">{{ nameErrorMessage }}</span>
-            }
-          </div>
-
-          @if (store.saveError()) {
-            <p class="server-error" role="alert">{{ store.saveError() }}</p>
+        <div class="field">
+          <label class="field__label" for="edit-name">Name</label>
+          <input
+            id="edit-name"
+            type="text"
+            formControlName="name"
+            class="field__input"
+            [class.field__input--error]="nameErrorMessage"
+            aria-required="true"
+            [attr.aria-invalid]="!!nameErrorMessage"
+            aria-describedby="edit-name-error"
+          />
+          @if (nameErrorMessage) {
+            <span id="edit-name-error" class="field__error" role="alert">{{ nameErrorMessage }}</span>
           }
+        </div>
 
+        @if (store.saveError()) {
+          <p class="server-error" role="alert">{{ store.saveError() }}</p>
+        }
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" (click)="onClose()">Close</button>
           @if (store.category()?.canEdit) {
-            <div class="form-actions">
-              <button type="button" class="btn btn--secondary" (click)="onBack()">Cancel</button>
-              <button
-                type="submit"
-                class="btn btn--primary"
-                [disabled]="store.saving() || form.pending"
-              >
-                @if (store.saving()) {
-                  <span class="spinner" aria-hidden="true"></span>
-                }
-                Save
-              </button>
-            </div>
+            <button
+              type="submit"
+              class="btn btn--primary"
+              [disabled]="store.saving() || form.pending"
+            >
+              @if (store.saving()) {
+                <span class="spinner" aria-hidden="true"></span>
+              }
+              Save
+            </button>
           }
-        </form>
-      </div>
+        </div>
+      </form>
     }
-  </main>
+  </div>
 </div>
 
-@if (confirmStore.isOpen()) {
-  <app-confirm-dialog
-    [message]="confirmStore.message()"
-    confirmLabel="Delete"
-    (confirmed)="onDeleteConfirmed()"
-    (cancelled)="onDeleteCancelled()"
-  />
-}

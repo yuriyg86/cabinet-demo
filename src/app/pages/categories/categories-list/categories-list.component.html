@@ -35,7 +35,7 @@
         </thead>
         <tbody>
           @for (item of store.items(); track item.id) {
-            <tr class="table__row" (click)="store.navigateToItem(item.id)" style="cursor: pointer">
+            <tr class="table__row" (click)="store.openEditModal(item.id)" style="cursor: pointer">
               <td>{{ item.id }}</td>
               <td>{{ item.name }}</td>
               <td class="table__actions-col" (click)="$event.stopPropagation()">
@@ -74,7 +74,19 @@
 </div>
 
 @if (store.addModalOpen()) {
-  <app-add-category-modal />
+  <app-add-category-modal
+    [saving]="store.creating()"
+    (submitted)="onAddModalSubmitted($event)"
+    (cancelled)="store.closeAddModal()"
+  />
+}
+
+@if (store.editingId()) {
+  <app-category-form
+    [id]="store.editingId()!"
+    (closed)="onEditModalClose()"
+    (saved)="onEditModalSaved()"
+  />
 }
 
 @if (confirmStore.isOpen()) {
