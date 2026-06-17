@@ -1,7 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\")"
+      "Bash(ls \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\")",
+      "Bash(ls ~/devprojects/recursion/cabinet-app/node_modules | grep -E \"jest|zone\")",
+      "Bash(wsl -d ubuntu-24.04 ls ~/devprojects/recursion/cabinet-app/node_modules)",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"ls ~/devprojects/recursion/cabinet-app/node_modules | grep -E '^jest|^zone|^@jest'\")",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"node -e \\\\\"const {createCjsPreset} = require\\('./node_modules/jest-preset-angular/presets'\\); console.log\\(JSON.stringify\\(createCjsPreset\\(\\), null, 2\\)\\)\\\\\"\" --prefix ~/devprojects/recursion/cabinet-app)",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"cd ~/devprojects/recursion/cabinet-app && node -e \\\\\"const {createCjsPreset} = require\\('./node_modules/jest-preset-angular/presets'\\); console.log\\(JSON.stringify\\(createCjsPreset\\(\\), null, 2\\)\\)\\\\\"\")",
+      "Read(//c/Users/user/.claude/**)",
+      "Bash(find / -name \"plan-and-implement*\" -not -path \"*/proc/*\" 2>/dev/null | head -20)",
+      "Bash(ls /home/user/.claude/ 2>/dev/null || ls ~/.claude/)",
+      "Bash(python3 -m json.tool)",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"ls ~/devprojects/recursion/cabinet-app | grep -E 'stylelint|.stylelint'\")",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"cat ~/devprojects/recursion/cabinet-app/package.json | grep -i 'stylelint'\")"
     ]
   }
 }
