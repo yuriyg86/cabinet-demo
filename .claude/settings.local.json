@@ -27,7 +27,17 @@
       "Bash(npx ng *)",
       "Bash(git -C \"\\\\\\\\wsl.localhost\\\\ubuntu-24.04\\\\home\\\\user\\\\devprojects\\\\recursion\\\\cabinet-app\" diff --stat HEAD)",
       "Bash(npm run *)",
-      "Bash(wsl -d ubuntu-24.04 -e bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm run generate:api 2>&1\")"
+      "Bash(wsl -d ubuntu-24.04 -e bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm run generate:api 2>&1\")",
+      "Bash(find \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/src/app\" -type f -name \"*.ts\" ! -name \"*.spec.ts\" | sort)",
+      "Bash(find \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/src/app\" -type f -name \"*.spec.ts\" | sort)",
+      "Bash(cd \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app\" && find src/app -type f -name \"*.ts\" ! -name \"*.spec.ts\" ! -path \"*/api/generated/*\" | sort)",
+      "Bash(cd \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app\" && find src/app -type d | sort)",
+      "Bash(cd \"//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app\" && wc -l src/app/**/*.ts 2>/dev/null | tail -1)",
+      "Bash(npx jest *)",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"cat /home/user/devprojects/recursion/cabinet-app/jest.config.js\")",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"node -e \\\\\"require\\('@angular/platform-browser/testing'\\)\\\\\" 2>&1\")",
+      "Bash(wsl -d ubuntu-24.04 -- bash -c \"cd /home/user/devprojects/recursion/cabinet-app && node -e \\\\\"require\\('@angular/platform-browser/testing'\\)\\\\\" 2>&1\")",
+      "PowerShell(wsl -d ubuntu-24.04 -- bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npx jest --no-coverage --testPathPattern='confirm-dialog.store' 2>&1\")"
     ]
   }
 }

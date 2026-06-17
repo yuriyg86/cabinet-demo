@@ -13,5 +13,11 @@ module.exports = {
     ],
   },
   moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],
+  moduleNameMapper: {
+    '^@angular/platform-browser-dynamic/testing$':
+      '<rootDir>/src/__mocks__/@angular/platform-browser-dynamic/testing.ts',
+    '^@angular/platform-browser/animations$':
+      '<rootDir>/src/__mocks__/@angular/platform-browser/animations.ts',
+  },
   transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
 };
