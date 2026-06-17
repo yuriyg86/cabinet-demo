@@ -1,0 +1,87 @@
+<div class="page">
+  <header class="page-header">
+    <h1 class="page-header__title">Categories</h1>
+    @if (store.canAdd()) {
+      <button type="button" class="btn btn--primary" (click)="store.openAddModal()">+ Add</button>
+    }
+  </header>
+
+  <main class="page-content">
+    <div class="table-wrapper">
+      <div class="search-bar">
+        <input
+          type="search"
+          class="search-bar__input"
+          placeholder="Search…"
+          aria-label="Search categories"
+          (input)="onSearchInput($any($event.target).value)"
+        />
+      </div>
+
+      <table class="table" aria-label="Categories">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">
+              <button type="button" class="sort-btn" (click)="store.toggleSort()" aria-label="Sort by name">
+                Name
+                <span class="sort-btn__arrow" aria-hidden="true">{{ store.sortDesc() ? '↓' : '↑' }}</span>
+              </button>
+            </th>
+            <th scope="col" class="table__actions-col">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of store.items(); track item.id) {
+            <tr class="table__row" (click)="store.navigateToItem(item.id)" style="cursor: pointer">
+              <td>{{ item.id }}</td>
+              <td>{{ item.name }}</td>
+              <td class="table__actions-col" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="btn btn--icon btn--danger-icon"
+                  [disabled]="store.deletingId() === item.id"
+                  (click)="onDeleteClick(item.id, item.name)"
+                  [attr.aria-label]="'Delete ' + item.name"
+                >
+                  @if (store.deletingId() === item.id) {
+                    <span class="spinner" aria-hidden="true"></span>
+                  } @else {
+                    ✕
+                  }
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (store.isEmpty()) {
+        <p class="empty-state">No categories found.</p>
+      }
+
+      @if (store.loading()) {
+        <div class="load-indicator" aria-live="polite" aria-label="Loading">
+          <span class="spinner"></span>
+        </div>
+      }
+
+      <div #scrollSentinel class="scroll-sentinel" aria-hidden="true"></div>
+    </div>
+  </main>
+</div>
+
+@if (store.addModalOpen()) {
+  <app-add-category-modal />
+}
+
+@if (confirmStore.isOpen()) {
+  <app-confirm-dialog
+    [message]="confirmStore.message()"
+    confirmLabel="Delete"
+    (confirmed)="onDeleteConfirmed()"
+    (cancelled)="onDeleteCancelled()"
+  />
+}

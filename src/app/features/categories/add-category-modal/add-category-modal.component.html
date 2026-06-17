@@ -1,0 +1,36 @@
+<div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="add-modal-title">
+  <div class="modal">
+    <h2 id="add-modal-title" class="modal__title">Add</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="modal__form">
+      <div class="field">
+        <label class="field__label" for="add-name">
+          * Name
+        </label>
+        <input
+          id="add-name"
+          type="text"
+          formControlName="name"
+          class="field__input"
+          [class.field__input--error]="nameErrorMessage"
+          aria-required="true"
+          [attr.aria-invalid]="!!nameErrorMessage"
+          aria-describedby="add-name-error"
+        />
+        @if (nameErrorMessage) {
+          <span id="add-name-error" class="field__error" role="alert">{{ nameErrorMessage }}</span>
+        }
+      </div>
+
+      <div class="modal__actions">
+        <button type="button" class="btn btn--secondary" (click)="onCancel()">Close</button>
+        <button type="submit" class="btn btn--primary" [disabled]="store.creating() || form.pending">
+          @if (store.creating()) {
+            <span class="spinner" aria-hidden="true"></span>
+          }
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

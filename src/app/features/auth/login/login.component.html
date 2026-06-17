@@ -1,0 +1,54 @@
+<div class="login-page">
+  <div class="login-card">
+    <h1 class="login-card__title">Logon to Zidium</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="login-card__form">
+      <div class="field">
+        <label class="field__label" for="login">Login</label>
+        <input
+          id="login"
+          type="text"
+          formControlName="login"
+          autocomplete="username"
+          class="field__input"
+          [class.field__input--error]="loginControl.invalid && loginControl.touched"
+          aria-required="true"
+          [attr.aria-invalid]="loginControl.invalid && loginControl.touched"
+          aria-describedby="login-error"
+        />
+        @if (loginControl.invalid && loginControl.touched) {
+          <span id="login-error" class="field__error" role="alert">Login is required</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          class="field__input"
+          [class.field__input--error]="passwordControl.invalid && passwordControl.touched"
+          aria-required="true"
+          [attr.aria-invalid]="passwordControl.invalid && passwordControl.touched"
+          aria-describedby="password-error"
+        />
+        @if (passwordControl.invalid && passwordControl.touched) {
+          <span id="password-error" class="field__error" role="alert">Password is required</span>
+        }
+      </div>
+
+      @if (store.error()) {
+        <p class="login-card__server-error" role="alert">{{ store.error() }}</p>
+      }
+
+      <button type="submit" class="btn btn--primary login-card__submit" [disabled]="store.loading()">
+        @if (store.loading()) {
+          <span class="spinner" aria-hidden="true"></span>
+        }
+        Login
+      </button>
+    </form>
+  </div>
+</div>
