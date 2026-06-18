@@ -13,12 +13,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { EditCategory } from '../../../api/models/categories.models';
+
 import { CategoriesListStore } from './categories-list.store';
 import { ConfirmDialogStore } from '../../../shared/confirm-dialog/confirm-dialog.store';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
-import { AddCategoryModalComponent } from '../add-category-modal/add-category-modal.component';
-import { CategoryFormComponent } from '../category-form/category-form.component';
+import { CategoryAddModalComponent } from '../category-add-modal/category-add-modal.component';
+import { CategoryEditModalComponent } from '../category-edit-modal/category-edit-modal.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -27,7 +27,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './categories-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CategoriesListStore, ConfirmDialogStore],
-  imports: [ConfirmDialogComponent, AddCategoryModalComponent, CategoryFormComponent, FormsModule],
+  imports: [ConfirmDialogComponent, CategoryAddModalComponent, CategoryEditModalComponent, FormsModule],
 })
 export class CategoriesListComponent implements OnInit, OnDestroy {
   protected readonly store = inject(CategoriesListStore);
@@ -93,8 +93,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     this.store.loadFirstPage();
   }
 
-  protected onAddModalSubmitted(data: EditCategory): void {
-    this.store.createItem(data);
+  protected onAddModalSaved(): void {
+    this.store.closeAddModal();
+    this.store.loadFirstPage();
+  }
+
+  protected onAddModalClosed(): void {
+    this.store.closeAddModal();
   }
 
 

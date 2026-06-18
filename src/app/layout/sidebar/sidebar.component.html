@@ -13,46 +13,22 @@
   </button>
 
   <ul class="sidebar__nav" role="list">
-    <li>
-      <a
-        routerLink="/categories"
-        routerLinkActive="sidebar__nav-item--active"
-        class="sidebar__nav-item"
-        [attr.aria-label]="collapsed() ? 'Categories' : null"
-        [attr.title]="collapsed() ? 'Categories' : null"
-      >
-        <span class="sidebar__nav-icon" aria-hidden="true">⊞</span>
-        @if (!collapsed()) {
-          <span class="sidebar__nav-label">Categories</span>
-        }
-      </a>
-    </li>
-    <li>
-      <a
-        routerLink="/dashboard"
-        class="sidebar__nav-item"
-        [attr.aria-label]="collapsed() ? 'Dashboard' : null"
-        [attr.title]="collapsed() ? 'Dashboard' : null"
-      >
-        <span class="sidebar__nav-icon" aria-hidden="true">◫</span>
-        @if (!collapsed()) {
-          <span class="sidebar__nav-label">Dashboard</span>
-        }
-      </a>
-    </li>
-    <li>
-      <a
-        routerLink="/components"
-        class="sidebar__nav-item"
-        [attr.aria-label]="collapsed() ? 'Components' : null"
-        [attr.title]="collapsed() ? 'Components' : null"
-      >
-        <span class="sidebar__nav-icon" aria-hidden="true">❖</span>
-        @if (!collapsed()) {
-          <span class="sidebar__nav-label">Components</span>
-        }
-      </a>
-    </li>
+    @for (item of navItems; track item.route) {
+      <li>
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="sidebar__nav-item--active"
+          class="sidebar__nav-item"
+          [attr.aria-label]="collapsed() ? item.label : null"
+          [attr.title]="collapsed() ? item.label : null"
+        >
+          <span class="sidebar__nav-icon" aria-hidden="true">{{ item.icon }}</span>
+          @if (!collapsed()) {
+            <span class="sidebar__nav-label">{{ item.label }}</span>
+          }
+        </a>
+      </li>
+    }
   </ul>
 
   <div class="sidebar__bottom">

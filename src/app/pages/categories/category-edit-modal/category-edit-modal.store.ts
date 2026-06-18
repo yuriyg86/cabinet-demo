@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
 import { Category, EditCategory } from '../../../api/models/categories.models';
 
-interface CategoryFormState {
+interface CategoryEditModalState {
   category: Category | null;
   loading: boolean;
   saving: boolean;
@@ -14,7 +14,7 @@ interface CategoryFormState {
   saveCompleted: boolean;
 }
 
-const initialState: CategoryFormState = {
+const initialState: CategoryEditModalState = {
   category: null,
   loading: false,
   saving: false,
@@ -27,7 +27,7 @@ interface SaveParams {
   data: EditCategory;
 }
 
-export const CategoryFormStore = signalStore(
+export const CategoryEditModalStore = signalStore(
   withState(initialState),
   withMethods((store, api = inject(CategoriesApiService)) => ({
     load: rxMethod<number>(

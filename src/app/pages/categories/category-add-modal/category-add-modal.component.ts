@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, input, OnInit, output } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit, output, untracked } from '@angular/core';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
-import { EditCategory } from '../../../api/models/categories.models';
 import { Observable, timer, switchMap, map } from 'rxjs';
+import { CategoryAddModalStore } from './category-add-modal.store';
 
 function nameExistsValidator(api: CategoriesApiService, id: number | null): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
@@ -15,26 +15,36 @@ function nameExistsValidator(api: CategoriesApiService, id: number | null): Asyn
 }
 
 @Component({
-  selector: 'app-add-category-modal',
-  templateUrl: './add-category-modal.component.html',
-  styleUrl: './add-category-modal.component.scss',
+  selector: 'app-category-add-modal',
+  templateUrl: './category-add-modal.component.html',
+  styleUrl: './category-add-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [CategoryAddModalStore],
   imports: [ReactiveFormsModule],
 })
-export class AddCategoryModalComponent implements OnInit {
-  readonly saving = input.required<boolean>();
-  readonly submitted = output<EditCategory>();
-  readonly cancelled = output<void>();
+export class CategoryAddModalComponent implements OnInit {
+  readonly saved = output<void>();
+  readonly closed = output<void>();
 
+  protected readonly store = inject(CategoryAddModalStore);
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(CategoriesApiService);
 
-  protected form = this.fb.nonNullable.group({
+  protected readonly form = this.fb.nonNullable.group({
     name: ['', { validators: [Validators.required] }],
   });
 
+  constructor() {
+    effect(() => this.emitWhenSaved());
+  }
+
   ngOnInit(): void {
     this.form.controls.name.addAsyncValidators(nameExistsValidator(this.api, null));
+  }
+
+  private emitWhenSaved(): void {
+    if (!this.store.saveCompleted()) return;
+    untracked(() => this.saved.emit());
   }
 
   protected get nameControl(): FormControl<string> {
@@ -54,10 +64,10 @@ export class AddCategoryModalComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    this.submitted.emit(this.form.getRawValue());
+    this.store.create(this.form.getRawValue());
   }
 
   protected onCancel(): void {
-    this.cancelled.emit();
+    this.closed.emit();
   }
 }

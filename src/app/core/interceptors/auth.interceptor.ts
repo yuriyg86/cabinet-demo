@@ -16,7 +16,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authorizedReq).pipe(
     catchError((error: unknown) => {
       const isUnauthorized = error instanceof HttpErrorResponse && error.status === 401;
-      const isRefreshRequest = req.url.includes('/front/logon');
+      const isRefreshRequest = req.url.includes('/front/logon'); // TODO It's not good to hardcode endpoint this way, but 'generated' doesn't export
 
       if (!isUnauthorized || isRefreshRequest) {
         return throwError(() => error);

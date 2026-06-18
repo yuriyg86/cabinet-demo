@@ -1,23 +1,26 @@
 import { ReactiveFormsModule } from '@angular/forms';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
-import { AddCategoryModalComponent } from './add-category-modal.component';
+import { CategoryAddModalComponent } from './category-add-modal.component';
 
-describe(AddCategoryModalComponent.name, () => {
-  let spectator: Spectator<AddCategoryModalComponent>;
+describe(CategoryAddModalComponent.name, () => {
+  let spectator: Spectator<CategoryAddModalComponent>;
 
   const createComponent = createComponentFactory({
-    component: AddCategoryModalComponent,
+    component: CategoryAddModalComponent,
     imports: [ReactiveFormsModule],
     providers: [
-      mockProvider(CategoriesApiService, { nameExists: jest.fn(() => of(false)) }),
+      mockProvider(CategoriesApiService, {
+        nameExists: jest.fn(() => of(false)),
+        create: jest.fn(() => NEVER),
+      }),
     ],
   });
 
   beforeEach(() => {
     jest.useFakeTimers();
-    spectator = createComponent({ props: { saving: false } });
+    spectator = createComponent();
   });
 
   afterEach(() => {
@@ -40,30 +43,29 @@ describe(AddCategoryModalComponent.name, () => {
   });
 
   describe('onSubmit', () => {
-    it('should mark form touched and not emit when invalid', () => {
-      const submittedSpy = jest.fn();
-      spectator.output('submitted').subscribe(submittedSpy);
+    it('should mark form touched and not call store when invalid', () => {
+      const api = spectator.inject(CategoriesApiService);
       spectator.component['onSubmit']();
-      expect(submittedSpy).not.toHaveBeenCalled();
+      expect(api.create).not.toHaveBeenCalled();
       expect(spectator.component['form'].touched).toBe(true);
     });
 
-    it('should emit submitted with form value when valid', () => {
-      const submittedSpy = jest.fn();
-      spectator.output('submitted').subscribe(submittedSpy);
+    it('should call store.create with form value when valid', () => {
+      const api = spectator.inject(CategoriesApiService);
+      api.create = jest.fn(() => of(1));
       spectator.component['form'].setValue({ name: 'New Category' });
       jest.advanceTimersByTime(500);
       spectator.component['onSubmit']();
-      expect(submittedSpy).toHaveBeenCalledWith({ name: 'New Category' });
+      expect(api.create).toHaveBeenCalledWith({ name: 'New Category' });
     });
   });
 
   describe('onCancel', () => {
-    it('should emit cancelled', () => {
-      const cancelledSpy = jest.fn();
-      spectator.output('cancelled').subscribe(cancelledSpy);
+    it('should emit closed', () => {
+      const closedSpy = jest.fn();
+      spectator.output('closed').subscribe(closedSpy);
       spectator.component['onCancel']();
-      expect(cancelledSpy).toHaveBeenCalled();
+      expect(closedSpy).toHaveBeenCalled();
     });
   });
 });

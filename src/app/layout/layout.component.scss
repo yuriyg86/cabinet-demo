@@ -1,3 +1,5 @@
+@use 'styles/variables' as *;
+
 :host {
   display: flex;
   min-height: 100vh;
@@ -5,7 +7,7 @@
 
 .layout__content {
   flex: 1;
-  margin-left: 78px;
+  margin-left: $sidebar-collapsed-width;
   min-width: 0;
   transition: margin-left 0.2s ease;
 }

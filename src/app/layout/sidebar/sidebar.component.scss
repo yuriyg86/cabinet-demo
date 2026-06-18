@@ -1,4 +1,5 @@
-$sidebar-collapsed-width: 78px;
+@use 'styles/variables' as *;
+
 $sidebar-expanded-width: 220px;
 $transition: width 0.2s ease;
 

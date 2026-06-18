@@ -4,7 +4,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
-import { Category, EditCategory } from '../../../api/models/categories.models';
+import { Category } from '../../../api/models/categories.models';
 
 const pageSize = 20;
 
@@ -18,7 +18,6 @@ interface CategoriesListState {
   page: number;
   deletingId: number | null;
   addModalOpen: boolean;
-  creating: boolean;
   editingId: number | null;
 }
 
@@ -32,7 +31,6 @@ const initialState: CategoriesListState = {
   page: 0,
   deletingId: null,
   addModalOpen: false,
-  creating: false,
   editingId: null,
 };
 
@@ -51,10 +49,6 @@ export const CategoriesListStore = signalStore(
   withMethods((store, api = inject(CategoriesApiService)) => ({
     setSearch(search: string): void {
       patchState(store, { search, page: 0, items: [], hasMore: true });
-    },
-
-    toggleSort(): void {
-      patchState(store, { sortDesc: !store.sortDesc(), page: 0, items: [], hasMore: true });
     },
 
     openAddModal(): void {
@@ -128,24 +122,10 @@ export const CategoriesListStore = signalStore(
       patchState(store, { page: 0, items: [], hasMore: true });
       store.loadPage({ search: store.search(), sortDesc: store.sortDesc(), page: 0, append: false });
     },
-  })),
-  withMethods((store, api = inject(CategoriesApiService)) => ({
-    createItem: rxMethod<EditCategory>(
-      pipe(
-        tap(() => patchState(store, { creating: true })),
-        switchMap((data) =>
-          api.create(data).pipe(
-            tap(() => {
-              patchState(store, { creating: false, addModalOpen: false });
-              store.loadFirstPage();
-            }),
-            catchError(() => {
-              patchState(store, { creating: false });
-              return EMPTY;
-            }),
-          ),
-        ),
-      ),
-    ),
+
+    toggleSort(): void {
+      patchState(store, { sortDesc: !store.sortDesc(), page: 0, items: [], hasMore: true });
+      this.loadFirstPage();
+    },
   })),
 );

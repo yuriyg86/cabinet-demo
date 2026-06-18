@@ -67,6 +67,25 @@ describe(CategoriesListStore.name, () => {
       expect(spectator.service.page()).toBe(0);
       expect(spectator.service.items()).toEqual([]);
     });
+
+    it('should load page 0 with the new sortDesc value, not the old one', () => {
+      patchState(unprotected(spectator.service), { sortDesc: false, search: 'x', page: 2 });
+      api.getList.mockReturnValueOnce(NEVER);
+      spectator.service.toggleSort();
+      expect(api.getList).toHaveBeenCalledWith(
+        expect.objectContaining({ sortDesc: true, pageNumber: 0 }),
+      );
+    });
+
+    it('should load page 0 with append false, not continue from current page', () => {
+      patchState(unprotected(spectator.service), { page: 3 });
+      api.getList.mockReturnValueOnce(NEVER);
+      spectator.service.toggleSort();
+      expect(api.getList).toHaveBeenCalledWith(
+        expect.objectContaining({ pageNumber: 0 }),
+      );
+      expect(api.getList).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('openAddModal / closeAddModal', () => {
@@ -157,25 +176,5 @@ describe(CategoriesListStore.name, () => {
     });
   });
 
-  describe('createItem', () => {
-    it('should set creating to true while in-flight', () => {
-      api.create.mockReturnValueOnce(NEVER);
-      spectator.service.createItem({ name: 'New' });
-      expect(spectator.service.creating()).toBe(true);
-    });
 
-    it('should close modal and reload on success', () => {
-      api.getList.mockReturnValue(of({ items: [], canAdd: true }));
-      api.create.mockReturnValueOnce(of(1));
-      spectator.service.createItem({ name: 'New' });
-      expect(spectator.service.creating()).toBe(false);
-      expect(spectator.service.addModalOpen()).toBe(false);
-    });
-
-    it('should stop creating on error', () => {
-      api.create.mockReturnValueOnce(throwError(() => new Error()));
-      spectator.service.createItem({ name: 'New' });
-      expect(spectator.service.creating()).toBe(false);
-    });
-  });
 });

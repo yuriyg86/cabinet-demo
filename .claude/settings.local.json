@@ -37,7 +37,12 @@
       "Bash(wsl -d ubuntu-24.04 -- bash -c \"cat /home/user/devprojects/recursion/cabinet-app/jest.config.js\")",
       "Bash(wsl -d ubuntu-24.04 -- bash -c \"node -e \\\\\"require\\('@angular/platform-browser/testing'\\)\\\\\" 2>&1\")",
       "Bash(wsl -d ubuntu-24.04 -- bash -c \"cd /home/user/devprojects/recursion/cabinet-app && node -e \\\\\"require\\('@angular/platform-browser/testing'\\)\\\\\" 2>&1\")",
-      "PowerShell(wsl -d ubuntu-24.04 -- bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npx jest --no-coverage --testPathPattern='confirm-dialog.store' 2>&1\")"
+      "PowerShell(wsl -d ubuntu-24.04 -- bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npx jest --no-coverage --testPathPattern='confirm-dialog.store' 2>&1\")",
+      "Bash(ls \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\\\\\\\\src\\\\\\\\\")",
+      "Bash(mkdir \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\\\\\\\\src\\\\\\\\styles\")",
+      "Bash(move \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\\\\\\\\src\\\\\\\\app\\\\\\\\layout\\\\\\\\_variables.scss\" \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\\\\\\\\src\\\\\\\\styles\\\\\\\\_variables.scss\")",
+      "Bash(mkdir -p /home/user/devprojects/recursion/cabinet-app/src/styles && mv /home/user/devprojects/recursion/cabinet-app/src/app/layout/_variables.scss /home/user/devprojects/recursion/cabinet-app/src/styles/_variables.scss)",
+      "PowerShell(wsl -e bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm run test -- --passWithNoTests 2>&1\")"
     ]
   }
 }

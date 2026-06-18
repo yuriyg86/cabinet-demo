@@ -74,15 +74,14 @@
 </div>
 
 @if (store.addModalOpen()) {
-  <app-add-category-modal
-    [saving]="store.creating()"
-    (submitted)="onAddModalSubmitted($event)"
-    (cancelled)="store.closeAddModal()"
+  <app-category-add-modal
+    (saved)="onAddModalSaved()"
+    (closed)="onAddModalClosed()"
   />
 }
 
 @if (store.editingId()) {
-  <app-category-form
+  <app-category-edit-modal
     [id]="store.editingId()!"
     (closed)="onEditModalClose()"
     (saved)="onEditModalSaved()"

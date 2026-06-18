@@ -4,6 +4,12 @@ import { ConfirmDialogStore } from '../../shared/confirm-dialog/confirm-dialog.s
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { TokenService } from '../../core/services/token.service';
 
+interface NavItem {
+  label: string;
+  icon: string;
+  route: string;
+}
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -16,6 +22,12 @@ export class SidebarComponent {
   protected readonly confirmStore = inject(ConfirmDialogStore);
   private readonly tokenService = inject(TokenService);
   private readonly router = inject(Router);
+
+  protected readonly navItems: NavItem[] = [
+    { label: 'Categories', icon: '⊞', route: '/categories' },
+    { label: 'Dashboard', icon: '◫', route: '/dashboard' },
+    { label: 'Components', icon: '❖', route: '/components' },
+  ];
 
   protected readonly collapsed = signal(true);
 

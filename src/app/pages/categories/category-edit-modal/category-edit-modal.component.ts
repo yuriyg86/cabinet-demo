@@ -18,7 +18,7 @@ import {
   untracked,
 } from '@angular/core';
 import { Observable, timer, switchMap, map } from 'rxjs';
-import { CategoryFormStore } from './category-form.store';
+import { CategoryEditModalStore } from './category-edit-modal.store';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
 
 function nameExistsValidator(api: CategoriesApiService, currentId: number): AsyncValidatorFn {
@@ -32,19 +32,19 @@ function nameExistsValidator(api: CategoriesApiService, currentId: number): Asyn
 }
 
 @Component({
-  selector: 'app-category-form',
-  templateUrl: './category-form.component.html',
-  styleUrl: './category-form.component.scss',
+  selector: 'app-category-edit-modal',
+  templateUrl: './category-edit-modal.component.html',
+  styleUrl: './category-edit-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CategoryFormStore],
+  providers: [CategoryEditModalStore],
   imports: [ReactiveFormsModule],
 })
-export class CategoryFormComponent implements OnInit {
+export class CategoryEditModalComponent implements OnInit {
   readonly id = input.required<number>();
   readonly closed = output<void>();
   readonly saved = output<void>();
 
-  protected readonly store = inject(CategoryFormStore);
+  protected readonly store = inject(CategoryEditModalStore);
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(CategoriesApiService);
 

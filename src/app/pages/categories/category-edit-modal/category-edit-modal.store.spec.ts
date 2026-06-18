@@ -1,16 +1,16 @@
 import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
 import { NEVER, of, throwError } from 'rxjs';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
-import { CategoryFormStore } from './category-form.store';
+import { CategoryEditModalStore } from './category-edit-modal.store';
 
 const mockCategory = { id: 1, name: 'Cat A', canEdit: true };
 
-describe(CategoryFormStore.name, () => {
-  let spectator: SpectatorService<InstanceType<typeof CategoryFormStore>>;
+describe(CategoryEditModalStore.name, () => {
+  let spectator: SpectatorService<InstanceType<typeof CategoryEditModalStore>>;
   let api: jest.Mocked<CategoriesApiService>;
 
   const createService = createServiceFactory({
-    service: CategoryFormStore,
+    service: CategoryEditModalStore,
     providers: [
       mockProvider(CategoriesApiService, {
         getById: jest.fn(() => NEVER),
