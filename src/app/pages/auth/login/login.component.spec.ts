@@ -1,6 +1,6 @@
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
+import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/vitest';
 import { NEVER } from 'rxjs';
 import { AuthApiService } from '../../../api/services/auth-api.service';
 import { TokenService } from '../../../core/services/token.service';
@@ -13,9 +13,9 @@ describe(LoginComponent.name, () => {
     component: LoginComponent,
     imports: [ReactiveFormsModule],
     providers: [
-      mockProvider(AuthApiService, { logon: jest.fn(() => NEVER) }),
-      mockProvider(TokenService, { setTokens: jest.fn() }),
-      mockProvider(Router, { navigate: jest.fn() }),
+      mockProvider(AuthApiService, { logon: vi.fn(() => NEVER) }),
+      mockProvider(TokenService, { setTokens: vi.fn() }),
+      mockProvider(Router, { navigate: vi.fn() }),
     ],
   });
 

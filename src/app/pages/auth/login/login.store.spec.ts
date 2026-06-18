@@ -1,4 +1,4 @@
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider, SpectatorService, SpyObject } from '@ngneat/spectator/vitest';
 import { Router } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
 import { AuthApiService } from '../../../api/services/auth-api.service';
@@ -7,24 +7,24 @@ import { LoginStore } from './login.store';
 
 describe(LoginStore.name, () => {
   let spectator: SpectatorService<InstanceType<typeof LoginStore>>;
-  let authApi: jest.Mocked<AuthApiService>;
-  let tokenService: jest.Mocked<TokenService>;
-  let router: jest.Mocked<Router>;
+  let authApi: SpyObject<AuthApiService>;
+  let tokenService: SpyObject<TokenService>;
+  let router: SpyObject<Router>;
 
   const createService = createServiceFactory({
     service: LoginStore,
     providers: [
-      mockProvider(AuthApiService, { logon: jest.fn(() => NEVER) }),
-      mockProvider(TokenService, { setTokens: jest.fn() }),
-      mockProvider(Router, { navigate: jest.fn() }),
+      mockProvider(AuthApiService, { logon: vi.fn(() => NEVER) }),
+      mockProvider(TokenService, { setTokens: vi.fn() }),
+      mockProvider(Router, { navigate: vi.fn() }),
     ],
   });
 
   beforeEach(() => {
     spectator = createService();
-    authApi = spectator.inject(AuthApiService) as jest.Mocked<AuthApiService>;
-    tokenService = spectator.inject(TokenService) as jest.Mocked<TokenService>;
-    router = spectator.inject(Router) as jest.Mocked<Router>;
+    authApi = spectator.inject(AuthApiService) as SpyObject<AuthApiService>;
+    tokenService = spectator.inject(TokenService) as SpyObject<TokenService>;
+    router = spectator.inject(Router) as SpyObject<Router>;
   });
 
   it('should have loading as false initially', () => {
@@ -43,7 +43,7 @@ describe(LoginStore.name, () => {
     });
 
     it('should store tokens and navigate to /categories on success', () => {
-      authApi.logon.mockReturnValueOnce(of({ token: 'tok', refreshToken: 'ref' }));
+      authApi.logon.mockReturnValueOnce(of({ token: 'tok', refreshToken: 'ref', user: { displayName: '', timezoneOffset: '' } }));
       spectator.service.login({ login: 'user', password: 'pass' });
       expect(tokenService.setTokens).toHaveBeenCalledWith('tok', 'ref');
       expect(router.navigate).toHaveBeenCalledWith(['/categories']);

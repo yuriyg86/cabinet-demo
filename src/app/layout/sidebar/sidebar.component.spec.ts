@@ -1,5 +1,5 @@
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
+import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/vitest';
 import { MockComponents, MockDirective } from 'ng-mocks';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { TokenService } from '../../core/services/token.service';
@@ -16,8 +16,8 @@ describe(SidebarComponent.name, () => {
       MockDirective(RouterLinkActive),
     ],
     providers: [
-      mockProvider(TokenService, { clearTokens: jest.fn() }),
-      mockProvider(Router, { navigate: jest.fn() }),
+      mockProvider(TokenService, { clearTokens: vi.fn() }),
+      mockProvider(Router, { navigate: vi.fn() }),
     ],
   });
 

@@ -1,4 +1,4 @@
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/vitest';
 import { of } from 'rxjs';
 import { LogonService } from '../generated/api/logon.service';
 import { AuthApiService } from './auth-api.service';
@@ -10,8 +10,8 @@ describe(AuthApiService.name, () => {
     service: AuthApiService,
     providers: [
       mockProvider(LogonService, {
-        logon: jest.fn(() => of({ token: 'tok', refreshToken: 'ref' })),
-        refreshToken: jest.fn(() => of({ token: 'new-tok', refreshToken: 'new-ref' })),
+        logon: vi.fn(() => of({ token: 'tok', refreshToken: 'ref' })),
+        refreshToken: vi.fn(() => of({ token: 'new-tok', refreshToken: 'new-ref' })),
       }),
     ],
   });

@@ -1,4 +1,4 @@
-import { Spectator, createComponentFactory } from '@ngneat/spectator/jest';
+import { Spectator, createComponentFactory } from '@ngneat/spectator/vitest';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 
 describe(ConfirmDialogComponent.name, () => {
@@ -18,7 +18,7 @@ describe(ConfirmDialogComponent.name, () => {
 
   describe('confirmed output', () => {
     it('should emit when onConfirm is called', () => {
-      const confirmedSpy = jest.fn();
+      const confirmedSpy = vi.fn();
       spectator.output('confirmed').subscribe(confirmedSpy);
       spectator.component.onConfirm();
       expect(confirmedSpy).toHaveBeenCalled();
@@ -27,7 +27,7 @@ describe(ConfirmDialogComponent.name, () => {
 
   describe('cancelled output', () => {
     it('should emit when onCancel is called', () => {
-      const cancelledSpy = jest.fn();
+      const cancelledSpy = vi.fn();
       spectator.output('cancelled').subscribe(cancelledSpy);
       spectator.component.onCancel();
       expect(cancelledSpy).toHaveBeenCalled();

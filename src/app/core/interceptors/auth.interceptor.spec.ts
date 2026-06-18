@@ -2,7 +2,7 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { mockProvider } from '@ngneat/spectator/jest';
+import { mockProvider, SpyObject } from '@ngneat/spectator/vitest';
 import { of } from 'rxjs';
 import { AuthApiService } from '../../api/services/auth-api.service';
 import { TokenService } from '../services/token.service';
@@ -11,9 +11,9 @@ import { authInterceptor } from './auth.interceptor';
 describe('authInterceptor', () => {
   let http: HttpClient;
   let httpMock: HttpTestingController;
-  let tokenService: jest.Mocked<TokenService>;
-  let authApi: jest.Mocked<AuthApiService>;
-  let router: jest.Mocked<Router>;
+  let tokenService: SpyObject<TokenService>;
+  let authApi: SpyObject<AuthApiService>;
+  let router: SpyObject<Router>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,23 +21,23 @@ describe('authInterceptor', () => {
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
         mockProvider(TokenService, {
-          getToken: jest.fn().mockReturnValue(null),
-          getRefreshToken: jest.fn().mockReturnValue(null),
-          setTokens: jest.fn(),
-          clearTokens: jest.fn(),
+          getToken: vi.fn().mockReturnValue(null),
+          getRefreshToken: vi.fn().mockReturnValue(null),
+          setTokens: vi.fn(),
+          clearTokens: vi.fn(),
         }),
         mockProvider(AuthApiService, {
-          refreshToken: jest.fn(() => of({ token: 'new-tok', refreshToken: 'new-ref' })),
+          refreshToken: vi.fn(() => of({ token: 'new-tok', refreshToken: 'new-ref' })),
         }),
-        mockProvider(Router, { navigate: jest.fn() }),
+        mockProvider(Router, { navigate: vi.fn() }),
       ],
     });
 
     http = TestBed.inject(HttpClient);
     httpMock = TestBed.inject(HttpTestingController);
-    tokenService = TestBed.inject(TokenService) as jest.Mocked<TokenService>;
-    authApi = TestBed.inject(AuthApiService) as jest.Mocked<AuthApiService>;
-    router = TestBed.inject(Router) as jest.Mocked<Router>;
+    tokenService = TestBed.inject(TokenService) as SpyObject<TokenService>;
+    authApi = TestBed.inject(AuthApiService) as SpyObject<AuthApiService>;
+    router = TestBed.inject(Router) as SpyObject<Router>;
   });
 
   afterEach(() => httpMock.verify());
@@ -83,7 +83,7 @@ describe('authInterceptor', () => {
     tokenService.getToken.mockReturnValue('old-tok');
     tokenService.getRefreshToken.mockReturnValue(null);
 
-    http.get('/test').subscribe({ error: jest.fn() });
+    http.get('/test').subscribe({ error: vi.fn() });
 
     const req = httpMock.expectOne('/test');
     req.flush(null, { status: 401, statusText: 'Unauthorized' });
@@ -95,7 +95,7 @@ describe('authInterceptor', () => {
   it('should not attempt refresh for /front/logon requests', () => {
     tokenService.getToken.mockReturnValue('old-tok');
 
-    http.get('/front/logon').subscribe({ error: jest.fn() });
+    http.get('/front/logon').subscribe({ error: vi.fn() });
 
     const req = httpMock.expectOne('/front/logon');
     req.flush(null, { status: 401, statusText: 'Unauthorized' });

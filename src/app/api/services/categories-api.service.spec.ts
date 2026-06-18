@@ -1,29 +1,29 @@
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider, SpectatorService, SpyObject } from '@ngneat/spectator/vitest';
 import { of } from 'rxjs';
 import { CategoriesService } from '../generated/api/categories.service';
 import { CategoriesApiService } from './categories-api.service';
 
 describe(CategoriesApiService.name, () => {
   let spectator: SpectatorService<CategoriesApiService>;
-  let categoriesService: jest.Mocked<CategoriesService>;
+  let categoriesService: SpyObject<CategoriesService>;
 
   const createService = createServiceFactory({
     service: CategoriesApiService,
     providers: [
       mockProvider(CategoriesService, {
-        getAll: jest.fn(() => of({ items: [], canAdd: true })),
-        getById: jest.fn(() => of({ id: 1, name: 'Cat', canEdit: true })),
-        add: jest.fn(() => of(42)),
-        update: jest.fn(() => of(undefined)),
-        _delete: jest.fn(() => of(undefined)),
-        nameExists: jest.fn(() => of(false)),
+        getAll: vi.fn(() => of({ items: [], canAdd: true })),
+        getById: vi.fn(() => of({ id: 1, name: 'Cat', canEdit: true })),
+        add: vi.fn(() => of(42)),
+        update: vi.fn(() => of(undefined)),
+        _delete: vi.fn(() => of(undefined)),
+        nameExists: vi.fn(() => of(false)),
       }),
     ],
   });
 
   beforeEach(() => {
     spectator = createService();
-    categoriesService = spectator.inject(CategoriesService) as jest.Mocked<CategoriesService>;
+    categoriesService = spectator.inject(CategoriesService) as SpyObject<CategoriesService>;
   });
 
   describe('getList', () => {

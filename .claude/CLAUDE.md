@@ -197,7 +197,7 @@ source$.pipe(
 
 ## Testing
 
-- Use [Spectator](https://ngneat.github.io/spectator/) with Jest for unit tests (`@ngneat/spectator/jest`)
+- Use [Spectator](https://ngneat.github.io/spectator/) with Vitest for unit tests (`@ngneat/spectator/vitest`)
 - Use `createComponentFactory` for component tests
 - Use `mockProvider` to mock services
 - Refer to existing `*.spec.ts` files in the project for patterns and conventions

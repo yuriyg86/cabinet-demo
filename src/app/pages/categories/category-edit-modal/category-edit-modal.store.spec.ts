@@ -1,27 +1,27 @@
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider, SpectatorService, SpyObject } from '@ngneat/spectator/vitest';
 import { NEVER, of, throwError } from 'rxjs';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
 import { CategoryEditModalStore } from './category-edit-modal.store';
 
-const mockCategory = { id: 1, name: 'Cat A', canEdit: true };
+const mockCategory = { id: 1, name: 'Cat A', canEdit: true, canDelete: true };
 
 describe(CategoryEditModalStore.name, () => {
   let spectator: SpectatorService<InstanceType<typeof CategoryEditModalStore>>;
-  let api: jest.Mocked<CategoriesApiService>;
+  let api: SpyObject<CategoriesApiService>;
 
   const createService = createServiceFactory({
     service: CategoryEditModalStore,
     providers: [
       mockProvider(CategoriesApiService, {
-        getById: jest.fn(() => NEVER),
-        update: jest.fn(() => NEVER),
+        getById: vi.fn(() => NEVER),
+        update: vi.fn(() => NEVER),
       }),
     ],
   });
 
   beforeEach(() => {
     spectator = createService();
-    api = spectator.inject(CategoriesApiService) as jest.Mocked<CategoriesApiService>;
+    api = spectator.inject(CategoriesApiService) as SpyObject<CategoriesApiService>;
   });
 
   it('should have null category initially', () => {

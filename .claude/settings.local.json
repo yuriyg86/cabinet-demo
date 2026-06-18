@@ -42,7 +42,13 @@
       "Bash(mkdir \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\\\\\\\\src\\\\\\\\styles\")",
       "Bash(move \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\\\\\\\\src\\\\\\\\app\\\\\\\\layout\\\\\\\\_variables.scss\" \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu-24.04\\\\\\\\home\\\\\\\\user\\\\\\\\devprojects\\\\\\\\recursion\\\\\\\\cabinet-app\\\\\\\\src\\\\\\\\styles\\\\\\\\_variables.scss\")",
       "Bash(mkdir -p /home/user/devprojects/recursion/cabinet-app/src/styles && mv /home/user/devprojects/recursion/cabinet-app/src/app/layout/_variables.scss /home/user/devprojects/recursion/cabinet-app/src/styles/_variables.scss)",
-      "PowerShell(wsl -e bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm run test -- --passWithNoTests 2>&1\")"
+      "PowerShell(wsl -e bash -c \"cd /home/user/devprojects/recursion/cabinet-app && npm run test -- --passWithNoTests 2>&1\")",
+      "Bash(grep -n \"test\\\\|vitest\\\\|jest\" //wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/angular.json | grep -v \"node_modules\")",
+      "Bash(grep -rn \"jest\\\\.\" //wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/src --include=\"*.spec.ts\" | grep -v \"node_modules\" | sed 's|//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/||')",
+      "Bash(grep -rn \"@ngneat/spectator\" //wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/src --include=\"*.spec.ts\" | sed 's|//wsl.localhost/ubuntu-24.04/home/user/devprojects/recursion/cabinet-app/||')",
+      "Bash(xargs sed -i 's|@ngneat/spectator/jest|@ngneat/spectator/vitest|g; s|jest\\\\.fn\\(|vi.fn\\(|g; s|jest\\\\.spyOn\\(|vi.spyOn\\(|g; s|jest\\\\.clearAllMocks\\(\\)|vi.clearAllMocks\\(\\)|g; s|jest\\\\.useFakeTimers\\(\\)|vi.useFakeTimers\\(\\)|g; s|jest\\\\.useRealTimers\\(\\)|vi.useRealTimers\\(\\)|g; s|jest\\\\.advanceTimersByTime\\(|vi.advanceTimersByTime\\(|g')",
+      "Bash(xargs sed -i 's|jest\\\\.Mocked<|SpyObject<|g')",
+      "Bash(wsl -e bash -c \"export NVM_DIR=~/.nvm && source ~/.nvm/nvm.sh && nvm use 26 && cd /home/user/devprojects/recursion/cabinet-app && npm install 2>&1\")"
     ]
   }
 }

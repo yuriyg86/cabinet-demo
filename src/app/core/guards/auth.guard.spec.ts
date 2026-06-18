@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { mockProvider } from '@ngneat/spectator/jest';
+import { mockProvider } from '@ngneat/spectator/vitest';
 import { authGuard } from './auth.guard';
 import { TokenService } from '../services/token.service';
 
@@ -11,14 +11,14 @@ describe('authGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        mockProvider(TokenService, { hasToken: jest.fn().mockReturnValue(false) }),
-        mockProvider(Router, { createUrlTree: jest.fn((commands) => commands) }),
+        mockProvider(TokenService, { hasToken: vi.fn().mockReturnValue(false) }),
+        mockProvider(Router, { createUrlTree: vi.fn((commands) => commands) }),
       ],
     });
   });
 
   it('should return true when a token exists', () => {
-    TestBed.inject(TokenService).hasToken = jest.fn().mockReturnValue(true);
+    TestBed.inject(TokenService).hasToken = vi.fn().mockReturnValue(true);
     expect(runGuard()).toBe(true);
   });
 

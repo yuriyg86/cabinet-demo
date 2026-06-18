@@ -1,8 +1,8 @@
-import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator/vitest';
 import { ConfirmDialogStore } from './confirm-dialog.store';
 
 describe(ConfirmDialogStore.name, () => {
-  let spectator: SpectatorService<ConfirmDialogStore>;
+  let spectator: SpectatorService<InstanceType<typeof ConfirmDialogStore>>;
 
   const createService = createServiceFactory(ConfirmDialogStore);
 

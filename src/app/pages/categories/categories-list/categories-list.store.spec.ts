@@ -1,32 +1,32 @@
-import { createServiceFactory, mockProvider, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, mockProvider, SpectatorService, SpyObject } from '@ngneat/spectator/vitest';
 import { patchState } from '@ngrx/signals';
 import { unprotected } from '@ngrx/signals/testing';
 import { NEVER, of, throwError } from 'rxjs';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
 import { CategoriesListStore } from './categories-list.store';
 
-const mockItem = { id: 1, name: 'Cat A', canEdit: true };
-const mockItem2 = { id: 2, name: 'Cat B', canEdit: true };
+const mockItem = { id: 1, name: 'Cat A', canEdit: true, canDelete: true };
+const mockItem2 = { id: 2, name: 'Cat B', canEdit: true, canDelete: true };
 
 describe(CategoriesListStore.name, () => {
   let spectator: SpectatorService<InstanceType<typeof CategoriesListStore>>;
-  let api: jest.Mocked<CategoriesApiService>;
+  let api: SpyObject<CategoriesApiService>;
 
   const createService = createServiceFactory({
     service: CategoriesListStore,
     providers: [
       mockProvider(CategoriesApiService, {
-        getList: jest.fn(() => NEVER),
-        delete: jest.fn(() => NEVER),
-        create: jest.fn(() => NEVER),
+        getList: vi.fn(() => NEVER),
+        delete: vi.fn(() => NEVER),
+        create: vi.fn(() => NEVER),
       }),
     ],
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     spectator = createService();
-    api = spectator.inject(CategoriesApiService) as jest.Mocked<CategoriesApiService>;
+    api = spectator.inject(CategoriesApiService) as SpyObject<CategoriesApiService>;
   });
 
   it('should have empty items initially', () => {

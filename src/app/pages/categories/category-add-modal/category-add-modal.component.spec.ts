@@ -1,5 +1,5 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
+import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/vitest';
 import { NEVER, of } from 'rxjs';
 import { CategoriesApiService } from '../../../api/services/categories-api.service';
 import { CategoryAddModalComponent } from './category-add-modal.component';
@@ -12,19 +12,19 @@ describe(CategoryAddModalComponent.name, () => {
     imports: [ReactiveFormsModule],
     providers: [
       mockProvider(CategoriesApiService, {
-        nameExists: jest.fn(() => of(false)),
-        create: jest.fn(() => NEVER),
+        nameExists: vi.fn(() => of(false)),
+        create: vi.fn(() => NEVER),
       }),
     ],
   });
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     spectator = createComponent();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -52,9 +52,9 @@ describe(CategoryAddModalComponent.name, () => {
 
     it('should call store.create with form value when valid', () => {
       const api = spectator.inject(CategoriesApiService);
-      api.create = jest.fn(() => of(1));
+      api.create.mockReturnValueOnce(of(1));
       spectator.component['form'].setValue({ name: 'New Category' });
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       spectator.component['onSubmit']();
       expect(api.create).toHaveBeenCalledWith({ name: 'New Category' });
     });
@@ -62,7 +62,7 @@ describe(CategoryAddModalComponent.name, () => {
 
   describe('onCancel', () => {
     it('should emit closed', () => {
-      const closedSpy = jest.fn();
+      const closedSpy = vi.fn();
       spectator.output('closed').subscribe(closedSpy);
       spectator.component['onCancel']();
       expect(closedSpy).toHaveBeenCalled();

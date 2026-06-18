@@ -1,12 +1,13 @@
 ---
 name: cover-with-tests
-description: Write and fix Angular unit tests in this repo using Spectator + Jest + ng-mocks. Use this skill when asked to create, fix, or review spec files for Angular components, services, signal stores, pipes, or utilities.
+description: Write and fix Angular unit tests in this repo using Spectator + Vitest + ng-mocks. Use this skill when asked to create, fix, or review spec files for Angular components, services, signal stores, pipes, or utilities.
 ---
 
 ## Stack
 
-- **Framework:** Jest + [Spectator](https://ngneat.github.io/spectator/) (`@ngneat/spectator/jest`)
+- **Framework:** Vitest + [Spectator](https://ngneat.github.io/spectator/) (`@ngneat/spectator/vitest`)
 - **Mocking:** `ng-mocks` (`MockComponent`, `MockComponents`, `MockDirective`, `MockPipe`, `MockModule`) + Spectator's `mockProvider`
+- **Test runner:** `@angular/build:unit-test` (runs Vitest internally via `ng test`)
 
 ---
 
@@ -32,7 +33,7 @@ Pure functions and utilities never need `TestBed` or Spectator — just import a
 
 ```typescript
 import { MockComponents } from 'ng-mocks';
-import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/jest';
+import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator/vitest';
 
 import { MyComponent } from './my.component';
 import { SomeChildComponent } from '../some-child/some-child.component';
@@ -60,25 +61,25 @@ describe(MyComponent.name, () => {
 ### Services & signal stores
 
 ```typescript
-import { createServiceFactory, mockProvider, SpectatorService, SpyObject } from '@ngneat/spectator/jest';
-import { provideMockStore } from '@ngrx/store/testing';
+import { createServiceFactory, mockProvider, SpectatorService, SpyObject } from '@ngneat/spectator/vitest';
 
 const createService = createServiceFactory({
   service: MyStore,
   providers: [
-    mockProvider(MyApiService, { getData: jest.fn(() => NEVER) }),
-    provideMockStore({ selectors: [{ selector: selectResidentId, value: 'resident-123' }] }),
+    mockProvider(MyApiService, { getData: vi.fn(() => NEVER) }),
   ],
 });
 
-let spectator: SpectatorService<MyStore>;
+let spectator: SpectatorService<InstanceType<typeof MyStore>>;
 beforeEach(() => { spectator = createService(); });
 ```
+
+Note: for NgRx Signal Stores, use `SpectatorService<InstanceType<typeof MyStore>>` — not `SpectatorService<MyStore>`.
 
 ### Pipes
 
 ```typescript
-import { createPipeFactory, SpectatorPipe } from '@ngneat/spectator/jest';
+import { createPipeFactory, SpectatorPipe } from '@ngneat/spectator/vitest';
 const createPipe = createPipeFactory({ pipe: MyPipe, imports: [CurrencyPipe] });
 ```
 
@@ -131,7 +132,7 @@ spectator = createComponent({ props: { config: mockConfig } });
 
 ```typescript
 it('should emit back', () => {
-  const backSpy = jest.fn();
+  const backSpy = vi.fn();
   spectator.output('back').subscribe(backSpy);
   spectator.component.cancel();
   expect(backSpy).toHaveBeenCalled();
@@ -146,11 +147,11 @@ When a component uses `viewChild(SomeChildComponent)` and calls methods on it, t
 imports: [MockComponent(ChangeOrderLineItemFormComponent)],
 // ...
 it('should save when form is valid', () => {
-  const savedSpy = jest.fn();
+  const savedSpy = vi.fn();
   spectator.output('saved').subscribe(savedSpy);
 
   const formChild = spectator.query(ChangeOrderLineItemFormComponent)!;
-  jest.spyOn(formChild, 'warnUserIfFormInvalid').mockReturnValue(false);
+  vi.spyOn(formChild, 'warnUserIfFormInvalid').mockReturnValue(false);
 
   spectator.component.currentFormValue.set(mockFormValue);
   spectator.component.save();
@@ -204,7 +205,6 @@ Seed state directly and read the signal:
 ```typescript
 import { patchState } from '@ngrx/signals';
 import { unprotected } from '@ngrx/signals/testing';
-import { setAllEntities } from '@ngrx/signals/entities';
 
 it('should return only active payment methods', () => {
   patchState(unprotected(spectator.service), {
@@ -212,12 +212,6 @@ it('should return only active payment methods', () => {
   });
   expect(spectator.service.activePaymentMethods()).toHaveLength(1);
 });
-
-// Entity stores:
-patchState(
-  unprotected(spectator.service),
-  setAllEntities(mockPaymentMethods, paymentMethodEntityConfig),
-);
 ```
 
 Use `patchState(unprotected(...))` when testing a *derived value*. Use method calls when testing a *flow*.
@@ -230,8 +224,8 @@ Use `patchState(unprotected(...))` when testing a *derived value*. Use method ca
 
 ```typescript
 mockProvider(PaymentApiService, {
-  getPaymentMethods: jest.fn(() => NEVER),   // default: frozen mid-flight
-  createSetupIntent: jest.fn(() => NEVER),
+  getPaymentMethods: vi.fn(() => NEVER),   // default: frozen mid-flight
+  createSetupIntent: vi.fn(() => NEVER),
 })
 ```
 
@@ -243,7 +237,7 @@ Override per test by calling the mock method on the existing mock, not by reassi
 let apiService: SpyObject<PaymentApiService>;
 beforeEach(() => {
   spectator = createService();
-  apiService = spectator.inject(PaymentApiService);
+  apiService = spectator.inject(PaymentApiService) as SpyObject<PaymentApiService>;
 });
 
 // ✅ Correct — call the override method on the existing mock
@@ -251,13 +245,13 @@ apiService.getPaymentMethods.mockReturnValueOnce(
   throwError(() => new HttpErrorResponse({ status: 500 }))
 );
 
-// ❌ Wrong — reassigning replaces the jest.Mock with a plain fn, losing mock tracking
-apiService.getPaymentMethods = jest.fn().mockReturnValue(...);
+// ❌ Wrong — reassigning replaces the vi.Mock with a plain fn, losing mock tracking
+apiService.getPaymentMethods = vi.fn().mockReturnValue(...);
 ```
 
 ### Prefer `*Once` variants
 
-Use `mockReturnValueOnce`, `mockResolvedValueOnce`, `mockImplementationOnce` unless the same value is needed for multiple calls. The `Once` suffix documents intent: this behaviour is expected once, then the default takes over.
+Use `mockReturnValueOnce`, `mockResolvedValueOnce`, `mockImplementationOnce` unless the same value is needed for multiple calls.
 
 ```typescript
 service.confirm.mockResolvedValueOnce(data);                         // single call
@@ -265,27 +259,7 @@ service.poll.mockResolvedValue(status);                              // repeated
 service.poll.mockResolvedValueOnce(pending).mockResolvedValueOnce(done); // two different values
 ```
 
-Note: `jest.clearAllMocks()` clears call history but does **not** reset `mockReturnValue` defaults — only `jest.resetAllMocks()` does. Defaults set at factory-definition time are safe across tests.
-
-### Top-level const for mocks that vary per test
-
-Define the mock fn as a top-level `const` with a default, then call `mockReturnValueOnce` immediately before `createComponent()`. Never use a mutable `let` variable with a closure — it scatters setup across `beforeEach`/`afterEach` and hides what each test actually receives.
-
-```typescript
-// ✅ Correct — intent is local and explicit
-mockProvider(SomeService, { isFoo: jest.fn().mockReturnValue(false) }); // factory default
-
-beforeEach(() => {
-  spectator.inject(SomeService).isFoo.mockReturnValueOnce(true);
-  spectator = createComponent();
-});
-
-// ❌ Wrong — setup is split across multiple hooks, unclear at the call site
-let mockIsFoo = false;
-mockProvider(SomeService, { isFoo: jest.fn().mockImplementation(() => mockIsFoo) });
-beforeEach(() => { mockIsFoo = true; spectator = createComponent(); });
-afterEach(() => { mockIsFoo = false; });
-```
+Note: `vi.clearAllMocks()` clears call history but does **not** reset `mockReturnValue` defaults — only `vi.resetAllMocks()` does. Defaults set at factory-definition time are safe across tests.
 
 ### Observable return values
 
@@ -296,23 +270,10 @@ afterEach(() => { mockIsFoo = false; });
 | `throwError(() => new HttpErrorResponse({ status: 500 }))`     | Error path                              |
 | `EMPTY`                                                        | Completes immediately with no value     |
 
-### Global NgRx store selectors
-
-```typescript
-import { provideMockStore } from '@ngrx/store/testing';
-
-provideMockStore({
-  selectors: [
-    { selector: selectResidentId, value: 'resident-123' },
-    { selector: selectLeaseId, value: 'lease-456' },
-  ],
-})
-```
-
 ### Service tests
 
 ```typescript
-import { createServiceFactory, SpectatorService, mockProvider } from '@ngneat/spectator/jest';
+import { createServiceFactory, SpectatorService, mockProvider } from '@ngneat/spectator/vitest';
 
 describe(MyService.name, () => {
   let spectator: SpectatorService<MyService>;
@@ -327,13 +288,6 @@ describe(MyService.name, () => {
   it('should create', () => { expect(spectator.service).toBeTruthy(); });
 });
 ```
-
-### Common providers reference
-
-| Need                | Provider                                                                                                 |
-| ------------------- | -------------------------------------------------------------------------------------------------------- |
-| Environment config  | `{ provide: ENVIRONMENT_TOKEN, useValue: mockEnvironment }`                                              |
-| NgRx Store          | `mockProvider(Store)` or `provideMockStore({ initialState })` from `@ngrx/store/testing`                 |
 
 ---
 
@@ -351,7 +305,7 @@ spectator.click(byTestId('pay-button'));
 spectator.detectChanges();
 
 // Outputs
-const emitSpy = jest.spyOn(spectator.component.paymentConfirmed, 'emit');
+const emitSpy = vi.spyOn(spectator.component.paymentConfirmed, 'emit');
 spectator.click(byTestId('confirm'));
 expect(emitSpy).toHaveBeenCalledWith(mockPayload);
 
@@ -368,21 +322,21 @@ When the unit under test uses `timer()`, `delay()`, or `new Date()`:
 
 ```typescript
 beforeEach(() => {
-  jest.useFakeTimers();
-  jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
   spectator = createService();
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
-  jest.useRealTimers();
+  vi.clearAllMocks();
+  vi.useRealTimers();
 });
 
 it('should delay before calling the API', () => {
   spectator.service.load();
-  jest.advanceTimersByTime(999);
+  vi.advanceTimersByTime(999);
   expect(apiService.getData).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   expect(apiService.getData).toHaveBeenCalled();
 });
 ```
@@ -393,40 +347,13 @@ Always restore real timers in `afterEach` — fake timers bleed into other specs
 
 ## Step 8 · Mock data
 
-Place mock data in a `testing/` subdirectory next to the feature:
-
-```
-feature/
-└── testing/
-    ├── payment-methods.mocks.ts   ← factory builders
-    └── convenience-fee.mocks.ts   ← plain constants
-```
-
-Define factory builders with `Factory.define<T>(name).attrs({ ... })` from `rosie`, then use `.build()` (supports field overrides) and `.buildList(n)`:
+Place mock data as top-level `const` objects near the top of the spec file, or in a `testing/` subdirectory next to the feature for shared fixtures:
 
 ```typescript
-// testing/payment-methods.mocks.ts
-import { Factory } from 'rosie';
-import { ICardPaymentMethod, PaymentMethodType, CardPaymentMethodStatus } from '../interfaces/payment-method.interface';
-
-export const paymentMethodCardFactory = Factory.define<ICardPaymentMethod>(
-  'paymentMethodCardFactory',
-).attrs({
-  type: PaymentMethodType.Card,
-  cardBrand: 'visa',
-  cardLast4: '1234',
-  cardExpYear: '2030',
-  cardExpMonth: '01',
-  id: 'id',
-  status: CardPaymentMethodStatus.Active,
-  isDefault: true,
-});
-
-// in a spec
-paymentMethodCardFactory.build();                       // all defaults
-paymentMethodCardFactory.build({ cardLast4: '0000' });  // override one field
-paymentMethodCardFactory.buildList(3);                  // array of 3
+const mockItem = { id: 1, name: 'Cat A', canEdit: true, canDelete: true };
 ```
+
+When using generated API types, include **all required fields** in the mock object — TypeScript will catch missing ones at build time.
 
 ---
 
@@ -457,18 +384,6 @@ it('handleSubmit error')
 it('should return 0 when cart is empty')
 it('should throw when user email is missing')
 it('should disable the submit button while the form is loading')
-```
-
-### Interpolate enum values into test names
-
-When a test verifies behaviour tied to a specific enum value, use template literals so the test title updates automatically if the enum is renamed, and typos are caught by the compiler.
-
-```typescript
-// ✅ Correct
-it(`should return ${ImpossiblePaymentReason.PropertyNotYetManageable} when paymentStatus is ${UserActionType.PropertyNotYetManaged}`, () => { ... });
-
-// ❌ Incorrect — hard-coded literal drifts when the enum is renamed
-it('should return PropertyNotYetManageable when paymentStatus is PROPERTY_NOT_YET_MANAGED', () => { ... });
 ```
 
 ### AAA — the structural pattern
@@ -502,7 +417,7 @@ describe(PaymentMethodsStore.name, () => {
       it('should populate paymentMethods in state', () => {});
     });
     describe('failure', () => {
-      it('should call toastr.serverError with the error', () => {});
+      it('should set error message', () => {});
     });
   });
 });
@@ -527,8 +442,8 @@ Don't lock in deep params — a slightly different call would still pass the tes
 
 - `TestBed.configureTestingModule()` — always use Spectator factories
 - `schemas: [NO_ERRORS_SCHEMA]` instead of mocking standalone children
-- Reassigning a mock property (`service.method = jest.fn()...`) — call `mockReturnValueOnce` on the existing mock instead
+- Reassigning a mock property (`service.method = vi.fn()...`) — call `mockReturnValueOnce` on the existing mock instead
 - `mutate()` on signals — use `patchState` or `signal.set()`
-- `process.env` in tests without explicit setup — it is `undefined` in Jest
+- Importing from `@ngneat/spectator/jest` — always use `@ngneat/spectator/vitest`
 - Testing `rxMethod` effects with subscription operators — test through state/call assertions
 - Meaningless assertions (`expect(true).toBe(true)`) or inter-test dependencies
